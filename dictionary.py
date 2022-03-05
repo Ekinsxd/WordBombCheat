@@ -1,67 +1,60 @@
 import random
 
-prompt = "AST"
-words = []
-impressive_words = []
-simple_words = []
-wordDict = {}
-impWordDict = {}
-simpWordDict = {}
+class Dict:
+    def __init__(self):
+        self.prompt = ""
+        self.words = []
+        self.impressive_words = []
+        self.simple_words = []
+        self.wordDict = {}
+        self.impWordDict = {}
+        self.simpWordDict = {}
 
-def makeLists():
-    with open("englishwords.txt", "r") as file:
-        word = file.readline()
-        while word:
-            word = word.strip()
-            words.append(word.lower())
-            if len(word) >= 10:
-                impressive_words.append(word.lower())
-            if len(word) <= 5:
-                simple_words.append(word.lower())
+    def makeLists(self):
+        with open("englishwords.txt", "r") as file:
             word = file.readline()
-    file.close()
-    
-def findAnswer(sub):
-    if sub in wordDict:
-        return wordDict[sub].pop()
-    else:
-        subList = []
-        for word in words:
-            if sub in word:
-                subList.append(word)
-        random.shuffle(subList)
-        wordDict[sub] = subList
-        return wordDict[sub].pop()
+            while word:
+                word = word.strip()
+                self.words.append(word.lower())
+                if len(word) >= 10:
+                    self.impressive_words.append(word.lower())
+                if len(word) <= 5:
+                    self.simple_words.append(word.lower())
+                word = file.readline()
+        file.close()
 
-def findAnswerImp(sub):
-    if sub in impWordDict:
-        return impWordDict[sub].pop()
-    else:
-        subList = []
-        for word in impressive_words:
-            if sub in word:
-                subList.append(word)
-        random.shuffle(subList)
-        impWordDict[sub] = subList
-        return impWordDict[sub].pop()
-    
-def findAnswerSimple(sub):
-    if sub in simpWordDict:
-        return simpWordDict[sub].pop()
-    else:
-        subList = []
-        for word in simple_words:
-            if sub in word:
-                subList.append(word)
-        random.shuffle(subList)
-        simpWordDict[sub] = subList
-        return simpWordDict[sub].pop()
+    def findAnswer(self, sub):
+        if sub in self.wordDict:
+            return self.wordDict[sub].pop()
+        else:
+            subList = []
+            for word in self.words:
+                if sub in word:
+                    subList.append(word)
+            random.shuffle(subList)
+            self.wordDict[sub] = subList
+            return self.wordDict[sub].pop()
 
-makeLists() 
-print(findAnswerSimple(prompt))
+    def findAnswerImp(self, sub):
+        if sub in self.impWordDict:
+            return self.impWordDict[sub].pop()
+        else:
+            subList = []
+            for word in self.impressive_words:
+                if sub in word:
+                    subList.append(word)
+            random.shuffle(subList)
+            self.impWordDict[sub] = subList
+            return self.impWordDict[sub].pop()
 
-
-
-
-
-
+    def findAnswerSimple(self, sub):
+        if sub in self.simpWordDict:
+            return self.simpWordDict[sub].pop()
+        else:
+            subList = []
+            for word in self.simple_words:
+                if sub in word:
+                    subList.append(word)
+            random.shuffle(subList)
+            self.simpWordDict[sub] = subList
+            return self.simpWordDict[sub].pop()

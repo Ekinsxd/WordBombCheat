@@ -3,6 +3,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from time import sleep
+import dictionary as Vocab
 import main
 
 def ConnectRoom(driver):
@@ -24,13 +25,13 @@ def ConnectRoom(driver):
         exit(1)
 
 def isGameRunning(driver):
-    while (True):
-        try:
-            isRunning = driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[1]/div/header")
-            return isRunning.isDisplayed()
-        except:
-            print("Game Running Fail")
-            return False
+    try:
+        isRunning = driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[1]/div/header")
+        return isRunning.isDisplayed()
+    except:
+        print("Game Running Fail")
+        # always assume game is running for safety
+        return True
 
 def JoinGame(driver):
     #wait for game to be available
@@ -41,10 +42,12 @@ def JoinGame(driver):
     #Join game button
     joinButton = driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[3]/div[1]/div[1]/button")
     joinButton.click()
-
-
+    PlayGame(driver)
 
 def PlayGame(driver):
-    prompt = driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[2]/div[2]/div[2]/div")
-    print(prompt)
+    sleep(10)
+    Dict = Vocab()
+    while(isGameRunning(driver)):
+        prompt = driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[2]/div[2]/div[2]/div").text
+        print(prompt)
 
