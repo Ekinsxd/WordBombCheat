@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
 import Game
 
-BOT_NAME = "EsanBOT"
+BOT_NAME = "BOT"
 PATH = 'C:\Program Files\ChromeDriver\chromedriver.exe'
 url = "https://jklm.fun/"
 
@@ -14,6 +14,8 @@ url = "https://jklm.fun/"
 def main():
     sg.theme('Default1')
     layout = [
+        [sg.Text('Desired Username:')],
+        [sg.Text('', size=(0, 0)), sg.InputText()],
         [sg.Text('BombParty Room Code:')],
         [sg.Text('', size=(0, 0)), sg.InputText()],
         [sg.Text('Select Word Type:')],
@@ -26,15 +28,20 @@ def main():
     event, values = window.read()
     window.close()
 
+    global BOT_NAME
+    BOT_NAME = values[0]
+    
     words_type = None
-    room_number = values[0]
+    room_number = values[1]
 
-    if values[1]:
+    if values[2]:
         words_type = 1
-    elif values[2]:
+    elif values[3]:
         words_type = 2
     else:
         words_type = 3
+        
+        
     driver = webdriver.Chrome(executable_path=PATH)
     Game.ConnectRoom(driver)
     iframe = 0
