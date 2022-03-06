@@ -1,8 +1,12 @@
 import random
-import Words
+import frenchWords
+import englishWords
+# TODO Add SPANISH
+# import spanishWords
 
 class Dict:
-    def __init__(self):
+    def __init__(self, lang):
+        self.lang = lang
         self.prompt = ""
         self.words = []
         self.impressive_words = []
@@ -11,36 +15,21 @@ class Dict:
         self.impWordDict = {}
         self.simpWordDict = {}
 
-    # def save(self, str):
-    #     with open("Prompts.txt", "a") as file:
-    #         word = file.write(str)
-    #     file.close()
-
-    def makeLists(self, lang):
-        if lang == 1:
-            with open("englishwords.txt", "r") as file:
-                word = file.readline()
-                while word:
-                    word = word.strip()
-                    self.words.append(word.lower())
-                    if len(word) >= 10:
-                        self.impressive_words.append(word.lower())
-                    if len(word) <= 5:
-                        self.simple_words.append(word.lower())
-                    word = file.readline()
-            print(self.words)
-            file.close()
-        if lang == 2:
-            self.words = Words.words
+    def makeLists(self):
+        if self.lang == 1:
+            self.words = englishWords.words
+        if self.lang == 2:
+            self.words = frenchWords.words
+        # if self.lang == 3:
+        #     self.words = spanishWords.words
 
     def findAnswer(self, sub):
-        # self.save(sub+"\n")
         if sub in self.wordDict:
             return self.wordDict[sub].pop()
         else:
             subList = []
             for word in self.words:
-                if sub in word:
+                if sub in word.lower():
                     subList.append(word)
             random.shuffle(subList)
             self.wordDict[sub] = subList
