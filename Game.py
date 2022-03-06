@@ -7,18 +7,17 @@ import dictionary as vocab
 import main
 
 
-def ConnectRoom(driver):
-    code = input("Enter game room code.")
-    # code = "qvec"
+def ConnectRoom(driver, URL, room, bot):
+    code = room
 
     try:
-        driver.get(main.url + code)
+        driver.get(URL + code)
         sleep(1)
         # find name field
         LoginAsGuest = driver.find_element(by=By.CLASS_NAME, value="styled")
         LoginAsGuest.click()
         # LoginAsGuest.clear()
-        LoginAsGuest.send_keys(chr(8) * 10 + main.BOT_NAME + "\n")
+        LoginAsGuest.send_keys(chr(8) * 10 + bot + "\n")
         sleep(5)
 
     except:
@@ -42,7 +41,7 @@ def isGameRunning(driver):
         return True
 
 
-def JoinGame(driver):
+def JoinGame(driver, wordtype, lang):
     print("Joining Game!")
     # wait for game to be available
     running = isGameRunning(driver)
@@ -53,7 +52,7 @@ def JoinGame(driver):
     while (not running):
         sleep(0.2)
         running = isGameRunning(driver)
-    PlayGame(driver)
+    PlayGame(driver, wordtype, lang)
 
 
 def isPlayerTurn(driver):
@@ -66,16 +65,22 @@ def isPlayerTurn(driver):
         # always assume game is not your turn for safety
         return False
 
-def PlayGame(driver):
+def PlayGame(driver, wordtype, lang):
     dict = vocab.Dict()
-    # dict.makeLists()
+    dict.makeLists(lang)
     print("Lists Created")
     textfield = driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[3]/div[2]/div[2]/form/input")
     while isGameRunning(driver):
         while isPlayerTurn(driver):
             print("PLAYING!")
             prompt = driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[2]/div[2]/div[2]/div").text
-            word = dict.findAnswer(prompt.lower())
+
+            if wordtype == 1:
+                word = dict.findAnswer(prompt.lower())
+            if wordtype == 2:
+                word = dict.findAnswerImp(prompt.lower())
+            if wordtype == 3:
+                word = dict.findAnswerSimple(prompt.lower())
             print(word)
 
             # if realistic
