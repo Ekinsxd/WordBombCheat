@@ -1,7 +1,7 @@
 # Bot for Bomb Party!!!
 
 Libraries used: 
-  Selenium
-  random
-  time
-  PySimpleGUI
+  Selenium,
+  random,
+  time, 
+  and PySimpleGUI
