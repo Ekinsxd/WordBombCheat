@@ -4,8 +4,7 @@ import Words
 class Dict:
     def __init__(self):
         self.prompt = ""
-        # self.words = []
-        self.words = Words.words
+        self.words = []
         self.impressive_words = []
         self.simple_words = []
         self.wordDict = {}
@@ -17,19 +16,22 @@ class Dict:
     #         word = file.write(str)
     #     file.close()
 
-    def makeLists(self):
-        with open("englishwords.txt", "r") as file:
-            word = file.readline()
-            while word:
-                word = word.strip()
-                self.words.append(word.lower())
-                if len(word) >= 10:
-                    self.impressive_words.append(word.lower())
-                if len(word) <= 5:
-                    self.simple_words.append(word.lower())
+    def makeLists(self, lang):
+        if lang == 1:
+            with open("englishwords.txt", "r") as file:
                 word = file.readline()
-        print(self.words)
-        file.close()
+                while word:
+                    word = word.strip()
+                    self.words.append(word.lower())
+                    if len(word) >= 10:
+                        self.impressive_words.append(word.lower())
+                    if len(word) <= 5:
+                        self.simple_words.append(word.lower())
+                    word = file.readline()
+            print(self.words)
+            file.close()
+        if lang == 2:
+            self.words = Words.words
 
     def findAnswer(self, sub):
         # self.save(sub+"\n")
