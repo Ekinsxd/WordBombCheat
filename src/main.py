@@ -1,7 +1,7 @@
 import PySimpleGUI as sg
 from selenium import webdriver
 from time import sleep
-import Game
+import src.Game as Game
 
 
 class Controller:

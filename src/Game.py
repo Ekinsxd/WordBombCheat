@@ -1,10 +1,8 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
 from time import sleep
-import dictionary as vocab
-import main
+import src.dictionary as vocab
 
 GAME_URL = "https://jklm.fun/"
 
