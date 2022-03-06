@@ -5,60 +5,77 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
 import Game
-
-BOT_NAME = "TASBOT"
-PATH = 'C:\Program Files\ChromeDriver\chromedriver.exe'
-url = "https://jklm.fun/"
+import os
 
 
-def main():
-    sg.theme('Default1')
-    layout = [
-        [sg.Text('Desired Username:')],
-        [sg.Text('', size=(0, 0)), sg.InputText()],
-        [sg.Text('BombParty Room Code:')],
-        [sg.Text('', size=(0, 0)), sg.InputText()],
-        [sg.Text('Select Word Type:')],
-        [sg.Radio('All', "RADIO1", default=True)],
-        [sg.Radio('Impressive', "RADIO1", default=False)],
-        [sg.Radio('Simple', "RADIO1", default=False)],
-        [sg.Submit(), sg.Cancel()]
-    ]
-    window = sg.Window('BombParty Bot 1.0', layout, element_justification='c')
-    event, values = window.read()
-    window.close()
+class Main:
 
-    global BOT_NAME
-    BOT_NAME = values[0]
-    
-    words_type = None
-    room_number = values[1]
+    def __init__(self):
+        self.BOT_NAME = ""
+        self.ROOM_CODE = None
+        self.PATH = ''
+        self.url = "https://jklm.fun/"
+        self.WORDS_TYPE = None
+        self.LANG = None
 
-    if values[2]:
-        words_type = 1
-    elif values[3]:
-        words_type = 2
-    else:
-        words_type = 3
-        
-        
-    driver = webdriver.Chrome(executable_path=PATH)
-    Game.ConnectRoom(driver)
-    iframe = 0
-    WebDriverWait(driver, 10).until(
-        EC.frame_to_be_available_and_switch_to_it(iframe))
+    def main(self):
+        sg.theme('Default1')
+        layout = [
+            [sg.Text('Desired Username:')],
+            [sg.Text('', size=(0, 0)), sg.InputText()],
+            [sg.Text('BombParty Room Code:')],
+            [sg.Text('', size=(0, 0)), sg.InputText()],
+            [sg.Text('ChromeDriver Location:')],
+            [sg.Text('', size=(0, 0)), sg.InputText(), sg.FileBrowse()],
+            [sg.Text('Select Language:')],
+            [sg.Radio('English', "RADIO1", default=True), sg.Radio('French', "RADIO1", default=False)],
+            [sg.Text('Select Word Type:')],
+            [sg.Radio('All', "RADIO2", default=True), sg.Radio('Impressive', "RADIO2", default=False),
+                sg.Radio('Simple', "RADIO2", default=False)],
+            [sg.Submit(), sg.Cancel()]
+        ]
+        window = sg.Window('BombParty Bot 1.0', layout, element_justification='c')
+        event, values = window.read()
+        window.close()
 
-    while (True):
-        # try:
-        if (not Game.isGameRunning(driver)):
-            Game.JoinGame(driver)
+        self.BOT_NAME = values[0]
+
+        self.ROOM_CODE = values[1].lower()
+
+        self.PATH = values[2]
+
+        if values[3]:
+            self.LANG = 1
         else:
-            sleep(2)
-    # except:
-    #     print("Something Went Wrong, Restart.")
-    #     continue
+            self.LANG = 2
+
+        if values[5]:
+            self.WORDS_TYPE = 1
+        elif values[6]:
+            self.WORDS_TYPE = 2
+        else:
+            self.WORDS_TYPE = 3
+
+        print(self.WORDS_TYPE, self.LANG)
+
+
+        driver = webdriver.Chrome(executable_path=self.PATH)
+        Game.ConnectRoom(driver, self.url, self.ROOM_CODE, self.BOT_NAME)
+        iframe = 0
+        WebDriverWait(driver, 10).until(
+            EC.frame_to_be_available_and_switch_to_it(iframe))
+
+        while (True):
+            # try:
+            if (not Game.isGameRunning(driver)):
+                Game.JoinGame(driver, self.WORDS_TYPE, self.LANG)
+            else:
+                sleep(2)
+        # except:
+        #     print("Something Went Wrong, Restart.")
+        #     continue
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    main()
+    Main().main()
