@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from time import sleep
 import Game
 
-BOT_NAME = "BOT"
+BOT_NAME = "TASBOT"
 PATH = 'C:\Program Files\ChromeDriver\chromedriver.exe'
 url = "https://jklm.fun/"
 

@@ -29,9 +29,10 @@ def ConnectRoom(driver):
 def isGameRunning(driver):
     try:
         # check top if the prompt says they are waiting
-        isRunning = driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[1]/div/header").text
-        print(isRunning)
-        if " 0s" in isRunning or isRunning == " ":
+        isRunning = driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[1]/div/header")
+        visible = isRunning.is_displayed()
+        # print(visible)
+        if " 0s" in isRunning.text or not visible:
             return True
         else:
             return False
@@ -50,31 +51,40 @@ def JoinGame(driver):
     joinButton.click()
     sleep(0.5)
     while (not running):
-        sleep(0.5)
+        sleep(0.2)
         running = isGameRunning(driver)
     PlayGame(driver)
 
 
 def isPlayerTurn(driver):
     try:
-        isPlayer = driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[3]/div[2]/div[1]/span[1]").text
-        print("ISPLAYER" + isPlayer.text == main.BOT_NAME)
-        print(isPlayer)
-        return isPlayer == main.BOT_NAME
+        isPlayer = driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[3]/div[2]/div[2]")
+        isVisible = isPlayer.is_displayed()
+        return isVisible
     except:
+        print("PlayerTurn Fail")
         # always assume game is not your turn for safety
         return False
 
-
 def PlayGame(driver):
-    print("Playing Game!")
     dict = vocab.Dict()
-    dict.makeLists()
-    textfield = driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[3]/div[2]/div[2]/form/input").text
-    while isGameRunning(driver) and isPlayerTurn(driver):
-        print("PLAYING!")
-        prompt = driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[2]/div[2]/div[2]/div").text
-        word = dict.findAnswer(prompt)
-        print(word)
-        textfield.send_keys(word + '\n')
-        sleep(0.2)
+    # dict.makeLists()
+    print("Lists Created")
+    textfield = driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[3]/div[2]/div[2]/form/input")
+    while isGameRunning(driver):
+        while isPlayerTurn(driver):
+            print("PLAYING!")
+            prompt = driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[2]/div[2]/div[2]/div").text
+            word = dict.findAnswer(prompt.lower())
+            print(word)
+
+            # if realistic
+            sleep(0.6)
+            for ch in word:
+                textfield.send_keys(ch)
+                sleep(0.05)
+            textfield.send_keys('\n')
+
+            # if CHEATER
+            # textfield.send_keys(word + "\n")
+            sleep(0.5)

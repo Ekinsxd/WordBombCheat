@@ -1,14 +1,21 @@
 import random
+import Words
 
 class Dict:
     def __init__(self):
         self.prompt = ""
-        self.words = []
+        # self.words = []
+        self.words = Words.words
         self.impressive_words = []
         self.simple_words = []
         self.wordDict = {}
         self.impWordDict = {}
         self.simpWordDict = {}
+
+    # def save(self, str):
+    #     with open("Prompts.txt", "a") as file:
+    #         word = file.write(str)
+    #     file.close()
 
     def makeLists(self):
         with open("englishwords.txt", "r") as file:
@@ -21,9 +28,11 @@ class Dict:
                 if len(word) <= 5:
                     self.simple_words.append(word.lower())
                 word = file.readline()
+        print(self.words)
         file.close()
 
     def findAnswer(self, sub):
+        # self.save(sub+"\n")
         if sub in self.wordDict:
             return self.wordDict[sub].pop()
         else:
