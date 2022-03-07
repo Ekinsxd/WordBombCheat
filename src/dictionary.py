@@ -26,7 +26,10 @@ class Dict:
 
     def findAnswer(self, sub):
         if sub in self.wordDict:
-            return self.wordDict[sub].pop()
+            if len(self.wordDict[sub]) > 0:
+                return self.wordDict[sub].pop()
+            else:
+                return  "no more words :("
         else:
             subList = []
             for word in self.words:
@@ -38,7 +41,10 @@ class Dict:
 
     def findAnswerImp(self, sub):
         if sub in self.impWordDict:
-            return self.impWordDict[sub].pop()
+            if len(self.impWordDict[sub]) > 0:
+                return self.impWordDict[sub].pop()
+            else:
+                return  "no more words :("
         else:
             subList = []
             for word in self.impressive_words:
@@ -50,7 +56,10 @@ class Dict:
 
     def findAnswerSimple(self, sub):
         if sub in self.simpWordDict:
-            return self.simpWordDict[sub].pop()
+            if len(self.simpWordDict[sub]) > 0:
+                return self.simpWordDict[sub].pop()
+            else:
+                return  "no more words :("
         else:
             subList = []
             for word in self.simple_words:

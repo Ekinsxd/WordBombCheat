@@ -9,19 +9,20 @@ GAME_URL = "https://jklm.fun/"
 
 class Game:
 
-    def __init__(self, driver, name, room_code, word_type, lang):
+    def __init__(self, driver, name, room_code, word_type, lang, cheat):
         self.driver = driver
         self.name = name
         self.code = room_code
         self.url = GAME_URL
         self.type = word_type
         self.lang = lang
+        self.cheater = cheat
 
     def connectRoom(self):
         try:
             self.driver.get(self.url + self.code)
-            sleep(1)
             # find name field
+            WebDriverWait(self.driver, 1).until(EC.visibility_of_element_located((By.CLASS_NAME, "styled")))
             loginAsGuest = self.driver.find_element(by=By.CLASS_NAME, value="styled")
             loginAsGuest.click()
             # LoginAsGuest.clear()
@@ -60,11 +61,10 @@ class Game:
         # Join game button
         joinButton = self.driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[3]/div[1]/div[1]/button")
         joinButton.click()
-        sleep(0.5)
-        while (not running):
-            sleep(0.2)
-            running = self.isGameRunning()
+
+        WebDriverWait(self.driver, 600).until(EC.visibility_of_element_located((By.CLASS_NAME, "syllable")))
         self.playGame()
+
 
     def isPlayerTurn(self):
         try:
@@ -82,7 +82,11 @@ class Game:
         # Bottom text to enter in worDS
         textfield = self.driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[3]/div[2]/div[2]/form/input")
         while self.isGameRunning():
+
             while self.isPlayerTurn():
+                WebDriverWait(self.driver, 1).until(
+                    EC.element_to_be_clickable((By.CLASS_NAME, "selfTurn")))
+                sleep(0.2)
                 prompt = self.driver.find_element(by=By.XPATH, value="/html/body/div[2]/div[2]/div[2]/div[2]/div").text
 
                 # DO NOT HAVE HANGING IF STATEMENTS
@@ -93,14 +97,18 @@ class Game:
                 else:
                     word = dict.findAnswerSimple(prompt.lower())
 
-                # if realistic
-                sleep(0.3)
-                for ch in word:
-                    textfield.send_keys(ch)
-                    sleep(0.02)
-                textfield.send_keys('\n')
-
-                # if CHEATER
-                # textfield.send_keys(word + "\n")
-                # need to find a way to wait until its not your turn anymore, sometimes 0.5s is too little or too much.
-                sleep(0.5)
+                if self.cheater == False:
+                    # if realistic
+                    sleep(0.2)
+                    for ch in word:
+                        textfield.send_keys(ch)
+                        sleep(0.03)
+                    textfield.send_keys('\n')
+                    print(word)
+                else:
+                    # if CHEATER
+                    try:
+                        textfield.send_keys(word + "\n\n")
+                        print(word)
+                    except:
+                        pass

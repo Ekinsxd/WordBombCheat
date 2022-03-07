@@ -13,7 +13,7 @@ class Controller:
         sg.theme('Default1')
         layout = [
             [sg.Text('Desired Username:')],
-            [sg.Text('', size=(0, 0)), sg.InputText()],
+            [sg.Text('', size=(0, 0)), sg.InputText(default_text="Esan BOT")],
             [sg.Text('BombParty Room Code:')],
             [sg.Text('', size=(0, 0)), sg.InputText()],
             [sg.Text('ChromeDriver Location:')],
@@ -23,6 +23,8 @@ class Controller:
             [sg.Text('Select Word Type:')],
             [sg.Radio('All', "RADIO2", default=True), sg.Radio('Impressive', "RADIO2", default=False),
                 sg.Radio('Simple', "RADIO2", default=False)],
+            [sg.Text('Select Mode:')],
+            [sg.Radio('Cheater Mode', "RADIO3", default=True), sg.Radio('Fake Player Mode', "RADIO3", default=False)],
             [sg.Submit(), sg.Cancel()]
         ]
 
@@ -45,21 +47,24 @@ class Controller:
         else:
             wordType = 3
 
+        cheater = values[8] == True
+
         driver = webdriver.Chrome(executable_path=self.PATH)
-        game = Game.Game(driver, botName, code, wordType, lang)
+        game = Game.Game(driver, botName, code, wordType, lang, cheater)
         game.connectRoom()
 
         while True:
-            # try:
-            if not game.isGameRunning():
-                # if the game is in the lobby join
-                game.joinGame()
-            else:
-                # Wait for game to start
-                sleep(2)
-            # except:
-            #     print("Something Went Wrong, Restart.")
-            #     continue
+            try:
+                if not game.isGameRunning():
+                    # if the game is in the lobby join
+                    game.joinGame()
+                else:
+                    # Wait for game to start
+                    sleep(2)
+            except:
+                print("Something Went Wrong, Restart.")
+                game.playGame()
+                continue
 
 
 # Press the green button in the gutter to run the script.
